@@ -4,30 +4,30 @@ import LoginPage from "./LoginPage.js"
 import SingUpPage from "./SingUpPage.js"
 import TodayPage from './TodayPage.js'
 import HabitsPage from './HabitsPage.js'
+import HistoryPage from './HistoryPage.js'
+import { UserProvider } from "./userContext.js";
 
 import "./assets/css/reset.css";
 import "./assets/css/style.css";
 
 
 export default function App(){
-const [token, setToken] = React.useState('')
+
     return (
         <BrowserRouter>
            
+           <UserProvider>
+                <Routes>
+                
+                    <Route path="/" element={<LoginPage />} />
+                    <Route path="/cadastro" element={<SingUpPage />}/>
+                    <Route path="/hoje" element={<TodayPage />}/>
+                    <Route path="/habitos" element={<HabitsPage/>}/>
+                    <Route path="/historico" element={<HistoryPage/>}/>
+                </Routes>
+            </UserProvider>
             
-            <Routes>
-                <Route path="/" element={<LoginPage setToken={setToken} />} />
-                <Route path="/cadastro" element={<SingUpPage />}/>
-                <Route path="/hoje" element={<TodayPage token={token} />}/>
-                <Route path="/habitos" element={<HabitsPage token={token}/>}/>
-            </Routes>
             
         </BrowserRouter>
     )
 } 
-
- {/* <Header /> */}
-/* <Route path="/cadastro" element={}/>
-<Route path="/habitos" element={}/>
-<Route path="/hoje" element={}/>
-<Route path="/historico" element={}/> */

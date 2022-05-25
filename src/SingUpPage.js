@@ -2,8 +2,10 @@ import React from 'react'
 import logo from "./assets/img/logo.svg";
 import Input from './Input.js';
 import styled from "styled-components";
-import {useNavigate} from "react-router-dom";
+import {useNavigate, Link} from "react-router-dom";
 import axios from 'axios';
+import Loading from './Loading'
+
 export default function SingUpPage (){
     const URL = 'https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/auth/sign-up';
     const navigate = useNavigate()
@@ -11,7 +13,9 @@ export default function SingUpPage (){
     const [name, setName] = React.useState('')
     const [image, setImage] = React.useState('')
     const [password, setPassword] = React.useState('')
+    const [isLoading, setIsLoading] = React.useState(false)
     function singUp (){
+        setIsLoading(true)
         const body = {
             email,
             name,
@@ -19,19 +23,26 @@ export default function SingUpPage (){
             password
         }
         axios.post(URL, body)
-            .then((res)=>navigate('/'))
-            .catch((err)=>console.log(err))
+            .then((res)=>{
+            setIsLoading(false)
+            navigate('/')
+        })
+            .catch((err)=>{
+                setIsLoading(false)
+                console.log(err)})
     }
 
     return (
     <Container>
         <img src={logo} alt="Logo TrackIt" />
-        <Input type="text" placeholder="email" value={email} onChange={(e)=> setEmail(e.target.value)} />
-        <Input type="text" placeholder="senha" value={password} onChange={(e)=> setPassword(e.target.value)} />
-        <Input type="text" placeholder="nome" value={name} onChange={(e)=> setName(e.target.value)} />
-        <Input type="text" placeholder="foto" value={image} onChange={(e)=> setImage(e.target.value)} />
-        <Button onClick={()=>singUp()}><p>Cadastrar</p></Button>
+        <Input type="text" placeholder="email" disabled={isLoading} value={email} onChange={(e)=> setEmail(e.target.value)} />
+        <Input type="password" placeholder="senha" disabled={isLoading} value={password} onChange={(e)=> setPassword(e.target.value)} />
+        <Input type="text" placeholder="nome" disabled={isLoading} value={name} onChange={(e)=> setName(e.target.value)} />
+        <Input type="text" placeholder="foto" disabled={isLoading} value={image} onChange={(e)=> setImage(e.target.value)} />
+        <Button onClick={()=>singUp()}>{isLoading? <Loading/> : <p>Cadastrar</p>}</Button>
+        <Link to='/'>
         <Text><p>Já tem uma conta? Faça login!</p></Text>
+        </Link>
     </Container>
     )
 }

@@ -14,6 +14,7 @@ const Header = styled.header`
     z-index:1;
     left: 0;
     top: 0;
+    font-family: 'Playball', cursive;
 
     img {
         height: 51px;

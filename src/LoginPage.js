@@ -2,20 +2,21 @@ import React from 'react'
 import logo from "./assets/img/logo.svg";
 import Input from './Input.js';
 import styled from "styled-components";
-import {useNavigate} from "react-router-dom";
+import {useNavigate, Link} from "react-router-dom";
 import axios from 'axios';
 import Loading from './Loading'
+import { UserContext } from './userContext';
 
-export default function LoginPage ({setToken}){
+export default function LoginPage (){
     const URL = 'https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/auth/login'
     const [email, setEmail] = React.useState('')
     const [password, setPassword] = React.useState('')
     const [isLoading, setIsLoading] = React.useState(false)
-    const [isDisabled, setIsDisabled] = React.useState (false)
+    const {setUser} = React.useContext(UserContext)
     const navigate = useNavigate()
     
     function logIn (){
-        setIsDisabled(true)
+      
         setIsLoading(true)
         const body = {
             email,
@@ -24,22 +25,25 @@ export default function LoginPage ({setToken}){
         axios.post(URL, body)
             .then((res)=>{
                 setIsLoading(false)
-                setToken(res.data.token)
-                navigate('/habitos')
-                setIsDisabled(false)
+                setUser({token:res.data.token,
+                    image:res.data.image,
+                })
+                navigate('/hoje')
+                
             })
             .catch((err)=>{alert(err)
                 setIsLoading(false)
-                setIsDisabled(false)})
+                })
     }
 return (
     <Container>
         <img src={logo} alt="Logo TrackIt" />
-        <Input type="text" placeholder="email" disabled={isDisabled} value={email} onChange={(e)=> setEmail(e.target.value)} />
-        <Input type="password" placeholder="senha" disabled={isDisabled} value={password} onChange={(e)=> setPassword(e.target.value)} />
+        <Input type="text" placeholder="email" disabled={isLoading} value={email} onChange={(e)=> setEmail(e.target.value)} />
+        <Input type="password" placeholder="senha" disabled={isLoading} value={password} onChange={(e)=> setPassword(e.target.value)} />
         <Button onClick={()=>logIn()}> {isLoading? <Loading/>:<p>Entrar</p>}</Button>
-            
+        <Link to="/cadastro">
         <Text><p>Não tem uma conta? Cadastre-se!</p></Text>
+        </Link>  
     </Container>
 )
 }

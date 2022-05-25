@@ -8,8 +8,10 @@ import DayBox from './DayBox.js';
 import HabitBox from './HabitBox.js'
 import { useEffect } from 'react/cjs/react.production.min';
 import Loading from './Loading'
-export default function HabitsPage ({token}){
-
+import { Link } from 'react-router-dom';
+import { UserContext } from './userContext.js';
+export default function HabitsPage (){
+    const {user} = React.useContext(UserContext)
     const URL = 'https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits'
     const [isLoading, setIsLoading] = React.useState(false)
     const [apiResult, setApiResult ] = React.useState('')
@@ -22,20 +24,18 @@ export default function HabitsPage ({token}){
      if (window.confirm('Tem certeza que deseja excluir essa hábito')){
     const config = {
         headers: {
-            Authorization: `Bearer ${token}`
+            Authorization: `Bearer ${user.token}`
         }
     }
     axios.delete(`${URL}/${id}`,config)
-    .then(res=>{console.log(res)
-        getHabits()
-        })
+    .then(getHabits())
     .catch(err=>console.log(err))
 }
 }
      function getHabits() {
         const config = {
             headers: {
-                Authorization: `Bearer ${token}`
+                Authorization: `Bearer ${user.token}`
             }
         }
         axios.get(URL, config)
@@ -44,7 +44,7 @@ export default function HabitsPage ({token}){
                     const response = res.data
                     if (response.length>0){
                     setApiResult ( response.map(({name, days, id}, i)=>
-                    <HabitBox name={name} days={days} key={i} id={id} deleteHabits={deleteHabits}/>))
+                    <HabitBox key={i} name={name} days={days}  id={id} deleteHabits={deleteHabits}/>))
                     } else {setApiResult (<p>Você não tem nenhum hábito cadastrado ainda. Adicione um hábito para começar a trackear!</p>)}
                 })
             .catch(err=>{
@@ -56,7 +56,7 @@ export default function HabitsPage ({token}){
          setIsLoading(true)
         const config = {
             headers: {
-                Authorization: `Bearer ${token}`
+                Authorization: `Bearer ${user.token}`
             }
         }
          const body = {
@@ -78,8 +78,8 @@ export default function HabitsPage ({token}){
 return (
 <Body>
     <Header>
-    <h1 onClick={()=>console.log(daysArray)}>TrackIt</h1>
-    <img src="https://super.abril.com.br/wp-content/uploads/2020/09/04-09_gato_SITE.jpg?quality=70&strip=info" alt="" />
+    <h1>TrackIt</h1>
+    <img src={user.image} alt="Foto de perfil do usuário" />
     </Header>
     <Container>
         <PageTitle>
@@ -105,17 +105,19 @@ return (
     </Container>
     <Footer>
         <p>Hábitos</p>
+        <Link to="/hoje">
         <p>Histórico</p>
+        </Link>
     </Footer>
 </Body>
 )
 }
 const Body= styled.div`
-    background-color:#e5e5e5;
+    background-color:#F2F2F2;
     height:100vh;
 `
 const Container = styled.div`
-background-color:#e5e5e5;
+background-color:#F2F2F2;
 margin-top:80px;
 padding: 30px 20px 10px 20px;;
 width: 100%;
