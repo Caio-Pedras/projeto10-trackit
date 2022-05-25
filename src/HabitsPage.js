@@ -85,7 +85,6 @@ return (
 const Body= styled.div`
     background-color:#e5e5e5;
     height:100vh;
-    overflow-y: none;
 `
 const Container = styled.div`
 margin-top:80px;
