@@ -1,19 +1,20 @@
 import styled from "styled-components";
 import React from 'react'
-export default function DayBox ({day, i, setDaysArray, daysArray}){
-const [isSelected, setIsSelected] = React.useState(false);
+export default function DayBox ({day, i, setDaysArray, daysArray, isLoading}){
 function selectDay () {
-    if (isSelected === false){ 
+    if (isLoading === false){
+    let validate = daysArray.some((element)=>element === i)
+    if (validate === false){ 
         setDaysArray([...daysArray, i])
-        setIsSelected(true)
-    } else if (isSelected=== true){
+      
+    } else if (validate=== true){
         setDaysArray(daysArray.filter((daysArray)=> daysArray !== i))
-        setIsSelected(false)
+     
     }
-    
+}
 }
 return(
-    <Day selected={isSelected} onClick={()=>selectDay (i)}> {day} </Day>
+    <Day selected={daysArray.some((element)=>element === i)} onClick={()=>selectDay (i)}> {day} </Day>
     )
 }
 const Day = styled.div `

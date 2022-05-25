@@ -1,9 +1,9 @@
 import styled from "styled-components";
 import React from 'react'
-export default function HabitBox({name, days}){
+export default function HabitBox({name, days, id, deleteHabits}){
     return (
-    <Habit>
-        <ion-icon name="trash-outline"></ion-icon>
+    <Habit >
+        <ion-icon name="trash-outline" onClick={()=>deleteHabits(id)}></ion-icon>
         <HabitTitle>{name}</HabitTitle>
         <DaysBar>
             <HabitDay selected={days.some((element)=> element===0)}>D</HabitDay>
