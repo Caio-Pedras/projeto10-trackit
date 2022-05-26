@@ -4,6 +4,7 @@ const Footer = styled.footer`
     padding: 30px;
     background-color: #FFFFFF;
     width: 100%;
+    height:80px;
     display:flex;
     justify-content:space-between;
     align-items:center;

@@ -25,6 +25,11 @@ export default function LoginPage (){
         axios.post(URL, body)
             .then((res)=>{
                 setIsLoading(false)
+                let userInfo = {
+                    token:res.data.token,
+                    image:res.data.image,
+                }
+                localStorage.setItem('USER',JSON.stringify(userInfo))
                 setUser({token:res.data.token,
                     image:res.data.image,
                 })
@@ -34,6 +39,11 @@ export default function LoginPage (){
             .catch((err)=>{alert(err)
                 setIsLoading(false)
                 })
+    }
+    if (localStorage.getItem('USER') !== null){
+        const UserLocal=JSON.parse(localStorage.getItem('USER'));
+        setUser(UserLocal)
+        navigate('/hoje')
     }
 return (
     <Container>

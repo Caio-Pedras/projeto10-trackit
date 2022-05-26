@@ -1,9 +1,11 @@
 import styled from "styled-components";
 import React from 'react'
+import { UserContext } from './userContext.js';
+
 export default function TodayHabitBox({name, done, currentSequence, highestSequence, id, habitDone}){
     const CurrentSequenceLength = (currentSequence>1)
     const HighestSequenceLength = (highestSequence>1)
-  
+       
     return (
     <TodayHabit >
         

@@ -18,7 +18,6 @@ export default function App(){
            
            <UserProvider>
                 <Routes>
-                
                     <Route path="/" element={<LoginPage />} />
                     <Route path="/cadastro" element={<SingUpPage />}/>
                     <Route path="/hoje" element={<TodayPage />}/>

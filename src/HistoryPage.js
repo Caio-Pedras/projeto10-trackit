@@ -5,7 +5,8 @@ import Header from './Header.js';
 import Footer from './Footer.js';
 import { Link } from 'react-router-dom';
 import { UserContext } from './userContext.js';
-
+import { CircularProgressbar, buildStyles } from 'react-circular-progressbar';
+import 'react-circular-progressbar/dist/styles.css';
 export default function HistoryPage (){
     const {user} = React.useContext(UserContext)
 return (
@@ -23,10 +24,24 @@ return (
     </Container>
     <Footer>
         <Link to='/habitos'>
-            <p>Hábitos</p>
+        <p>Hábitos</p>
         </Link>
         <Link to='/hoje'>
-            <p>Histórico</p>
+        <MenuButton>
+        <div style={{ position:'absolute', padding:'6px'}}>
+                <CircularProgressbar  
+                    value={user.totalDone}  
+                    maxValue={user.total}
+                    styles={buildStyles({
+                        pathColor: `#FFFFFF`,
+                        trailColor: 'none',
+                      })}  />
+            </div>
+            Hoje
+            </MenuButton>
+        </Link>
+        <Link to='/historico'>
+        <p>Histórico</p>
         </Link>
     </Footer>
 </Body>
@@ -36,12 +51,18 @@ return (
 const Body= styled.div`
     background-color:#F2F2F2;
     height:100vh;
+    position:fixed;
+    width:100%;
+    top:0;
+    left:0;
+    overflow-y:scroll;
 `
 const Container = styled.div`
 background-color:#F2F2F2;
 margin-top:80px;
 padding: 30px 20px;
 width: 100%;
+
 
 h2{
     color: #126BA5;
@@ -60,4 +81,17 @@ const PageTitle = styled.div`
 const HabitList = styled.div`
 margin-bottom: 100px;
   
+`
+const MenuButton =styled.div`
+background-color: #52B6FF;
+font-size: 20px;
+display:flex;
+align-items:center;
+justify-content:center;
+color: #FFFFFF;
+border-radius:50%;
+height: 90px;
+width:90px;
+margin-bottom:50px;
+position:relative;
 `

@@ -6,10 +6,12 @@ import Footer from './Footer.js';
 import Input from './Input.js';
 import DayBox from './DayBox.js';
 import HabitBox from './HabitBox.js'
-import { useEffect } from 'react/cjs/react.production.min';
 import Loading from './Loading'
 import { Link } from 'react-router-dom';
 import { UserContext } from './userContext.js';
+import { CircularProgressbar, buildStyles } from 'react-circular-progressbar';
+import 'react-circular-progressbar/dist/styles.css';
+
 export default function HabitsPage (){
     const {user} = React.useContext(UserContext)
     const URL = 'https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits'
@@ -104,8 +106,25 @@ return (
         </HabitList>
     </Container>
     <Footer>
+        <Link to='/habitos'>
         <p>Hábitos</p>
-        <Link to="/hoje">
+        </Link>
+        <Link to='/hoje'>
+    
+        <MenuButton>
+            <div style={{ position:'absolute', padding:'6px'}}>
+                <CircularProgressbar  
+                    value={user.totalDone}  
+                    maxValue={user.total}
+                    styles={buildStyles({
+                        pathColor: `#FFFFFF`,
+                        trailColor: 'none',
+                      })}  />
+            </div>
+            Hoje
+        </MenuButton>
+        </Link>
+        <Link to='/historico'>
         <p>Histórico</p>
         </Link>
     </Footer>
@@ -115,12 +134,18 @@ return (
 const Body= styled.div`
     background-color:#F2F2F2;
     height:100vh;
+    position:fixed;
+    width:100%;
+    top:0;
+    left:0;
+    overflow-y:scroll;
 `
 const Container = styled.div`
 background-color:#F2F2F2;
 margin-top:80px;
 padding: 30px 20px 10px 20px;;
 width: 100%;
+
 
 h2{
     color: #126BA5;
@@ -139,9 +164,8 @@ const Button = styled.div`
     justify-content:center;
     align-items:center;
     background-color: #52B6FF;
-    height: 30px;
     width: 40px;
-    border-radius:10px;
+    border-radius:5px;
     color:#FFFFFF;
     font-size:30px;
 `
@@ -186,4 +210,17 @@ const Cancel = styled.div`
 font-size: 16px;
 font-weight: 400;
 color: #52B6FF;
+`
+const MenuButton =styled.div`
+background-color: #52B6FF;
+font-size: 20px;
+display:flex;
+align-items:center;
+justify-content:center;
+color: #FFFFFF;
+border-radius:50%;
+height: 90px;
+width:90px;
+margin-bottom:50px;
+position:relative;
 `
