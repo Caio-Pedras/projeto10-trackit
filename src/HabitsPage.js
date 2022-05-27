@@ -13,7 +13,7 @@ import { CircularProgressbar, buildStyles } from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
 
 export default function HabitsPage (){
-    const {user} = React.useContext(UserContext)
+    const {user, progress, getTodayHabits} = React.useContext(UserContext)
     const URL = 'https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits'
     const [isLoading, setIsLoading] = React.useState(false)
     const [apiResult, setApiResult ] = React.useState('')
@@ -21,7 +21,8 @@ export default function HabitsPage (){
     const [name, setName] = React.useState('')
     const [daysArray, setDaysArray] = React.useState([])
     const days = ['D', 'S', 'T', 'Q', 'Q', 'S', 'S']
- React.useEffect (() => getHabits(),[])
+ 
+ React.useEffect (() => getHabits(),[user])
  function deleteHabits (id) {
      if (window.confirm('Tem certeza que deseja excluir essa hábito')){
     const config = {
@@ -30,11 +31,13 @@ export default function HabitsPage (){
         }
     }
     axios.delete(`${URL}/${id}`,config)
-    .then(getHabits())
+    .then(res=>{console.log(res)
+    getTodayHabits()})
     .catch(err=>console.log(err))
 }
 }
      function getHabits() {
+         if (user!=null){
         const config = {
             headers: {
                 Authorization: `Bearer ${user.token}`
@@ -50,9 +53,8 @@ export default function HabitsPage (){
                     } else {setApiResult (<p>Você não tem nenhum hábito cadastrado ainda. Adicione um hábito para começar a trackear!</p>)}
                 })
             .catch(err=>{
-                console.log(err)
-            setApiResult (<p>Você não tem nenhum hábito cadastrado ainda. Adicione um hábito para começar a trackear!</p>)} )
-
+                console.log(err)} )
+        }
      }
      function postHabits (){
          setIsLoading(true)
@@ -67,16 +69,18 @@ export default function HabitsPage (){
          }
          axios.post(URL,body,config)
          .then(res=>{
+             console.log(res)
             getHabits()
             setNewHabit(false)
             setName('')
             setDaysArray([])  
             setIsLoading(false)  
+            getTodayHabits()
         })
          .catch(err=>{console.log(err)
          setIsLoading(false)} )
      }
-   
+if (user!== null){
 return (
 <Body>
     <Header>
@@ -114,8 +118,8 @@ return (
         <MenuButton>
             <div style={{ position:'absolute', padding:'6px'}}>
                 <CircularProgressbar  
-                    value={user.totalDone}  
-                    maxValue={user.total}
+                    value={progress.totalDone}  
+                    maxValue={progress.total}
                     styles={buildStyles({
                         pathColor: `#FFFFFF`,
                         trailColor: 'none',
@@ -127,6 +131,21 @@ return (
         <Link to='/historico'>
         <p>Histórico</p>
         </Link>
+    </Footer>
+</Body>
+)
+}
+else return (    
+<Body>
+    <Header>
+    <h1 onClick={()=>console.log(user)}>TrackIt</h1>
+    </Header>
+    <Container>
+        <PageTitle>
+            <h2>É necessário estar logado para acessar essa página</h2>
+        </PageTitle>
+    </Container>
+    <Footer>
     </Footer>
 </Body>
 )

@@ -7,14 +7,24 @@ import axios from 'axios';
 import Loading from './Loading'
 import { UserContext } from './userContext';
 
+
 export default function LoginPage (){
     const URL = 'https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/auth/login'
     const [email, setEmail] = React.useState('')
     const [password, setPassword] = React.useState('')
     const [isLoading, setIsLoading] = React.useState(false)
-    const {setUser} = React.useContext(UserContext)
+    const {user ,setUser} = React.useContext(UserContext)
     const navigate = useNavigate()
-    
+    console.log(user)
+    React.useEffect(()=>tokenExists(),[])
+
+    function tokenExists (){
+        console.log('entrei')
+        if (localStorage.getItem('USER') !== null){
+            console.log('entrei2')
+            navigate('/hoje')
+        }
+    }
     function logIn (){
       
         setIsLoading(true)
@@ -33,6 +43,7 @@ export default function LoginPage (){
                 setUser({token:res.data.token,
                     image:res.data.image,
                 })
+
                 navigate('/hoje')
                 
             })
@@ -40,11 +51,8 @@ export default function LoginPage (){
                 setIsLoading(false)
                 })
     }
-    if (localStorage.getItem('USER') !== null){
-        const UserLocal=JSON.parse(localStorage.getItem('USER'));
-        setUser(UserLocal)
-        navigate('/hoje')
-    }
+
+
 return (
     <Container>
         <img src={logo} alt="Logo TrackIt" />

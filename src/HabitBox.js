@@ -1,9 +1,15 @@
 import styled from "styled-components";
 import React from 'react'
 export default function HabitBox({name, days, id, deleteHabits}){
+    const [existInFront, setExistInFront] = React.useState(true)
+    function deleteInFront(id){
+        deleteHabits(id)
+        setExistInFront(false)
+    }
+    if (existInFront === true){
     return (
     <Habit >
-        <ion-icon name="trash-outline" onClick={()=>deleteHabits(id)}></ion-icon>
+        <ion-icon name="trash-outline" onClick={()=>deleteInFront(id)}></ion-icon>
         <HabitTitle>{name}</HabitTitle>
         <DaysBar>
             <HabitDay selected={days.some((element)=> element===0)}>D</HabitDay>
@@ -16,6 +22,8 @@ export default function HabitBox({name, days, id, deleteHabits}){
         </DaysBar>
     </ Habit>
     )
+}
+else return <></>
 }
 const Habit = styled.div`
 width: 100%;
