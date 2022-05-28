@@ -6,26 +6,24 @@ import Footer from './Footer.js';
 import { Link } from 'react-router-dom';
 import { UserContext } from './userContext.js';
 import { CircularProgressbar, buildStyles } from 'react-circular-progressbar';
+import {useState, useContext, useEffect} from 'react'
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css'
-// import 'react-circular-progressbar/dist/styles.css';
 import dayjs from 'dayjs';
 import locale from "dayjs/locale/pt-br"
 import CalendarStyle from "./CalendarStyle.js";
+import react from 'react';
+
 export default function HistoryPage() {
     const URL = 'https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits/history/daily';
-    const { user, progress } = React.useContext(UserContext)
-    const [taskArray, setTaskArray] = React.useState(null)
-    React.useEffect (() => getCalendarInfo(),[user])
-    function ajudarocaio(str) {
-        let arr = str.split('/')
-        let arr2 = []
-        arr2.push(arr[2])
-        arr2.push(arr[1])
-        arr2.push(arr[0])
-        let output = arr2.join('-')
-        return output
-    }
+    const { user, progress } = useContext(UserContext)
+    const [taskArray, setTaskArray] = useState(null)
+	const [habitsList, setHabitList] = useState(null);
+    const [render, setRender] = useState(null)
+    const [title, setTitle] = useState(null)
+    useEffect (() => getCalendarInfo(),[user])
+    useEffect(()=>setHabitsContent(),[habitsList])
+    useEffect(()=>setHabitsTitle(),[habitsList])
     function getCalendarInfo(){
         if (user === null) return
         const config = {
@@ -41,6 +39,7 @@ export default function HistoryPage() {
         if(taskArray===null) return
 		let dateFormated = dayjs(date).format("DD/MM/YYYY");
 		let currentHabits = null;
+        
 		taskArray.map((taskArray) => {
 			if (taskArray.day === dateFormated) {
 				currentHabits = taskArray.habits;
@@ -55,6 +54,39 @@ export default function HistoryPage() {
         }
 		else return <p className="incompleted">{dayjs(date).format("DD")}</p>;
 	}
+	function listHabits(date) {
+		const dateFormated = dayjs(date).format("DD/MM/YYYY");
+		let currentHabits = null;
+		taskArray.forEach((task) => {
+			if (task.day === dateFormated) {
+				currentHabits = task.habits;
+			}
+		});
+
+		setHabitList(currentHabits);
+	}
+
+	function setHabitsContent() {
+        if (habitsList === null) return
+        console.log('to entrando na primeira', habitsList)
+        setRender(habitsList.map((habit, index) => (
+            <HabitBox key={index}>
+                <h1>{habit.name}: </h1>
+                <DoneButton color={habit.done? '#8FC549':'#E95766'}> <ion-icon name={habit.done? "checkmark-outline" :'close-outline'}></ion-icon> </DoneButton>
+            </HabitBox>
+        )))				
+    }
+
+	function setHabitsTitle() {
+        if (habitsList === null) return
+        console.log(habitsList)
+        let selectedDay = habitsList[0].date;
+         setTitle(
+         <PageTitle>
+             <h2>Hábitos do dia {dayjs(selectedDay).locale("pt-br").format("DD/MM")}</h2>
+         </PageTitle>)
+	}
+    
     if (user !== null) {
         return (
             <Body>
@@ -69,8 +101,11 @@ export default function HistoryPage() {
                     <CalendarStyle>
                         <Calendar
                         formatDay={(locale, date) => setDayClass(date)}
+                        onClickDay={(date) => listHabits(date)}
                         />
                      </CalendarStyle>
+                     {title}
+                     {render}
                 </Container>
                 <Footer>
                     <Link to='/habitos'>
@@ -125,6 +160,7 @@ background-color:#F2F2F2;
 margin-top:80px;
 padding: 30px 20px;
 width: 100%;
+margin-bottom:60px;
 
 
 h2{
@@ -141,10 +177,6 @@ const PageTitle = styled.div`
     color: ${props => props.color};
   }
 `
-const HabitList = styled.div`
-margin-bottom: 100px;
-  
-`
 const MenuButton = styled.div`
 background-color: #52B6FF;
 font-size: 20px;
@@ -157,4 +189,35 @@ height: 90px;
 width:90px;
 margin-bottom:50px;
 position:relative;
+`
+const HabitBox = styled.div `
+width: 100%;
+border-radius: 5px;
+background: #FFFFFF;
+margin-bottom: 20px;
+padding:20px;
+color:#666666;
+display: flex;
+justify-content: space-between;
+align-items:center;
+ h1{
+   font-size:20px;
+   margin-bottom:10px;  
+ }
+ p{
+    font-size:14px; 
+ }
+`
+const DoneButton = styled.div`
+display:flex;
+align-items:center;
+justify-content:center;
+border: 1px solid #E7E7E7;
+background-color: ${props=>props.color};
+border-radius:5px;
+ion-icon{
+ color:#ffffff;
+ height: 90px;
+ width: 90px;
+}
 `

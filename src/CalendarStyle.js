@@ -8,6 +8,7 @@ const CalendarStyle = styled.div`
 		line-height: 1.125em;
 		border-radius: 10px;
 		box-shadow: 0px -1px 1px rgba(0, 0, 0, 0.15);
+		margin-bottom: 20px;
 	}
 	.react-calendar--doubleView {
 		width: 700px;
@@ -99,17 +100,13 @@ const CalendarStyle = styled.div`
 	.completed {
 		width: 30px;
 		background-color: #8cc654;
-		border-radius: 50px;
-		color: white;
-		text-align: center;
+		border-radius: 50%;
 		margin-left: calc((100% - 30px) / 2);
 	}
 	.incompleted {
 		width: 30px;
 		background-color: #e95766;
-		border-radius: 50px;
-		color: white;
-		text-align: center;
+		border-radius: 50%;
 		margin-left: calc((100% - 30px) / 2);
 	}
 `;
