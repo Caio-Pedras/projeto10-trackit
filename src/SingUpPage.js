@@ -29,7 +29,7 @@ export default function SingUpPage (){
         })
             .catch((err)=>{
                 setIsLoading(false)
-                console.log(err)})
+                alert('Houve um erro, preencha os dados corretamente e tente novamente')})
     }
 
     return (

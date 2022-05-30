@@ -68,10 +68,9 @@ export default function HistoryPage() {
 
 	function setHabitsContent() {
         if (habitsList === null) return
-        console.log('to entrando na primeira', habitsList)
         setRender(habitsList.map((habit, index) => (
             <HabitBox key={index}>
-                <h1>{habit.name}: </h1>
+                <h1>{habit.name} </h1>
                 <DoneButton color={habit.done? '#8FC549':'#E95766'}> <ion-icon name={habit.done? "checkmark-outline" :'close-outline'}></ion-icon> </DoneButton>
             </HabitBox>
         )))				
@@ -79,7 +78,6 @@ export default function HistoryPage() {
 
 	function setHabitsTitle() {
         if (habitsList === null) return
-        console.log(habitsList)
         let selectedDay = habitsList[0].date;
          setTitle(
          <PageTitle>
@@ -134,7 +132,7 @@ export default function HistoryPage() {
     } else return (
         <Body>
             <Header>
-                <h1 onClick={() => console.log(user)}>TrackIt</h1>
+                <h1>TrackIt</h1>
             </Header>
             <Container>
                 <PageTitle>

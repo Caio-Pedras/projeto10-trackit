@@ -15,13 +15,10 @@ export default function LoginPage (){
     const [isLoading, setIsLoading] = React.useState(false)
     const {user ,setUser} = React.useContext(UserContext)
     const navigate = useNavigate()
-    console.log(user)
     React.useEffect(()=>tokenExists(),[])
 
     function tokenExists (){
-        console.log('entrei')
         if (localStorage.getItem('USER') !== null){
-            console.log('entrei2')
             navigate('/hoje')
         }
     }
@@ -47,7 +44,7 @@ export default function LoginPage (){
                 navigate('/hoje')
                 
             })
-            .catch((err)=>{alert(err)
+            .catch((err)=>{alert('Houve um erro, preencha os dados corretamente e tente novamente')
                 setIsLoading(false)
                 })
     }
@@ -56,9 +53,11 @@ export default function LoginPage (){
 return (
     <Container>
         <img src={logo} alt="Logo TrackIt" />
+        <Box opacity={isLoading? 0.5:1}>
         <Input type="text" placeholder="email" disabled={isLoading} value={email} onChange={(e)=> setEmail(e.target.value)} />
         <Input type="password" placeholder="senha" disabled={isLoading} value={password} onChange={(e)=> setPassword(e.target.value)} />
         <Button onClick={()=>logIn()}> {isLoading? <Loading/>:<p>Entrar</p>}</Button>
+        </Box>
         <Link to="/cadastro">
         <Text><p>Não tem uma conta? Cadastre-se!</p></Text>
         </Link>  
@@ -97,4 +96,7 @@ const Text = styled.div `
     color: #52B6FF;
     text-decoration-line: underline;
     cursor: pointer;
+`
+const Box = styled.div`
+opacity:${props=>props.opacity};
 `

@@ -15,9 +15,9 @@ export default function TodayPage() {
 
     const NOW = dayjs().locale("pt-br")
     const dayNow = CapitalizeDay(NOW)
-    const [isLoading, setIsLoading] = React.useState(false)
     const [render,setRender] = React.useState('')
     const { user, apiResult,progress, getTodayHabits} = React.useContext(UserContext)
+    const [Block, setBlock] = React.useState(false)
     function CapitalizeDay(str) {
         str = str.format("dddd").replace("-feira", '')
         return str.charAt(0).toUpperCase() + str.slice(1);
@@ -29,32 +29,28 @@ export default function TodayPage() {
     function RenderTodayHabits(array) {           
         if (array === null) return  
         setRender(array.map(({ name, done, currentSequence, highestSequence, id }, i) => 
-        <TodayHabitBox key={i} name={name} done={done} currentSequence={currentSequence} highestSequence={highestSequence} id={id}  habitDone={habitDone}/>))
+        <TodayHabitBox key={i} name={name} done={done} currentSequence={currentSequence} highestSequence={highestSequence} id={id}  habitDone={habitDone} Block={Block} setBlock={setBlock}/>))
     }
 function habitDone(id, done) {
-        if (isLoading) return
-            setIsLoading(true)
             const config = {
                 headers: {
                     Authorization: `Bearer ${user.token}`
                 }
             }
             if (!done) {
-                console.log('entrei no check', done)
                 const body = {
                     done: true
                 }
                 axios.post(`https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits/${id}/check`, body, config)
-                    .then(setIsLoading(false),getTodayHabits())
-                    .catch(err => console.log('erro no check', err))
+                    .then( setBlock(false),getTodayHabits())
+                    .catch(err => {alert('Houve um erro', err);})
             }
             else if (done) {
-                console.log('entrei no uncheck', done)
                 const body = {
                     done: false
                 }
                 axios.post(`https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits/${id}/uncheck`, body, config)
-                    .then(setIsLoading(false),getTodayHabits())
+                    .then( setBlock(false),getTodayHabits())
                     .catch(err => console.log('erro no unchekc', err))
             }      
     }
@@ -65,7 +61,7 @@ React.useEffect(()=>RenderTodayHabits(apiResult), [apiResult])
         return (
             <Body>
                 <Header>
-                    <h1 onClick={() => console.log(user)}>TrackIt</h1>
+                    <h1>TrackIt</h1>
                     <img src={user.image} alt="Foto de perfil do usuário" />
                 </Header>
                 <Container>
@@ -105,7 +101,7 @@ React.useEffect(()=>RenderTodayHabits(apiResult), [apiResult])
     } else return (
         <Body>
             <Header>
-                <h1 onClick={() => console.log(user)}>TrackIt</h1>
+                <h1>TrackIt</h1>
             </Header>
             <Container>
                 <PageTitle>

@@ -9,7 +9,7 @@ export default function UserContextProvider(props) {
     const [apiResult, setApiResult] = React.useState(null)
     const [progress, setProgress] = React.useState('')
     React.useEffect(() => verifyLocalStorage(), [])
-    React.useEffect(() => { console.log('toentrando no effect', user); getTodayHabits() }, [user])
+    React.useEffect(() => {getTodayHabits() }, [user])
     function verifyLocalStorage() {
         if (localStorage.getItem('USER') !== null) {
             const UserLocal = JSON.parse(localStorage.getItem('USER'));
@@ -29,7 +29,6 @@ export default function UserContextProvider(props) {
             .then(res => {
                 const response = res.data
                 setIsLoading(false)
-                console.log(response)
                 setApiResult(response)
                 let doneCount = response.filter((obj) => obj.done === true)
                 setProgress({
@@ -39,7 +38,6 @@ export default function UserContextProvider(props) {
                 
             })
             .catch(err => {
-                console.log(err)
                 setIsLoading(false)
             }
             )

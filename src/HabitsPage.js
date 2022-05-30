@@ -24,17 +24,14 @@ export default function HabitsPage (){
  
  React.useEffect (() => getHabits(),[user])
  function deleteHabits (id) {
-     if (window.confirm('Tem certeza que deseja excluir essa hábito')){
     const config = {
         headers: {
             Authorization: `Bearer ${user.token}`
         }
     }
     axios.delete(`${URL}/${id}`,config)
-    .then(res=>{console.log(res)
-    getTodayHabits()})
-    .catch(err=>console.log(err))
-}
+    .then(res=> getTodayHabits())
+    .catch(err=>alert('Houve um erro'))
 }
      function getHabits() {
          if (user!=null){
@@ -52,11 +49,18 @@ export default function HabitsPage (){
                     <HabitBox key={i} name={name} days={days}  id={id} deleteHabits={deleteHabits}/>))
                     } else {setApiResult (<p>Você não tem nenhum hábito cadastrado ainda. Adicione um hábito para começar a trackear!</p>)}
                 })
-            .catch(err=>{
-                console.log(err)} )
+            .catch(err=>alert('Houve um erro') )
         }
      }
      function postHabits (){
+         if (daysArray.length ===0){
+             alert('Selecione os dias do seu hábito')
+              return
+            }
+            if (name === ''){
+                alert('Digite o nome do seu hábito')
+                 return
+               }
          setIsLoading(true)
         const config = {
             headers: {
@@ -69,7 +73,6 @@ export default function HabitsPage (){
          }
          axios.post(URL,body,config)
          .then(res=>{
-             console.log(res)
             getHabits()
             setNewHabit(false)
             setName('')
@@ -77,7 +80,7 @@ export default function HabitsPage (){
             setIsLoading(false)  
             getTodayHabits()
         })
-         .catch(err=>{console.log(err)
+         .catch(err=>{alert('Ocorreu um erro',err)
          setIsLoading(false)} )
      }
 if (user!== null){
@@ -93,7 +96,7 @@ return (
             <Button onClick={()=>setNewHabit(!newHabit)}><p>+</p></Button>
         </PageTitle>
         {newHabit? 
-        <CreateHabit>
+        <CreateHabit opacity={isLoading? 0.5:1}>
             <Input type="text" placeholder="nome do hábito" disabled={isLoading} value={name} onChange={(e)=> setName(e.target.value)}/>
             <DaysBar>
             {days.map((day,i)=>
@@ -138,7 +141,7 @@ return (
 else return (    
 <Body>
     <Header>
-    <h1 onClick={()=>console.log(user)}>TrackIt</h1>
+    <h1>TrackIt</h1>
     </Header>
     <Container>
         <PageTitle>
@@ -197,6 +200,7 @@ margin-bottom: 100px;
     }
 `
 const CreateHabit = styled.div`
+opacity:${props=>props.opacity};
 width: 100%;
 border-radius: 5px;
 background: #FFFFFF;

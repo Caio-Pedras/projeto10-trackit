@@ -3,8 +3,10 @@ import React from 'react'
 export default function HabitBox({name, days, id, deleteHabits}){
     const [existInFront, setExistInFront] = React.useState(true)
     function deleteInFront(id){
+        if (window.confirm('Tem certeza que deseja excluir essa hábito')){
         deleteHabits(id)
         setExistInFront(false)
+    }
     }
     if (existInFront === true){
     return (

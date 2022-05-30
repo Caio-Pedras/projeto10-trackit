@@ -2,15 +2,18 @@ import styled from "styled-components";
 import React from 'react'
 import { UserContext } from './userContext.js';
 
-export default function TodayHabitBox({name, done, currentSequence, highestSequence, id, habitDone}){
+export default function TodayHabitBox({name, done, currentSequence, highestSequence, id, habitDone,Block, setBlock}){
     const {user,setUser, setProgress, progress} = React.useContext(UserContext)
     const [doneFront, setDoneFront] = React.useState(done) 
     const [currentSequenceFront, setCurrentSequenceFront] = React.useState(currentSequence)
     const [highestSequenceFront, setHighestSequenceFront] = React.useState(highestSequence) 
+   
     let CurrentSequenceLength = (currentSequenceFront>1)
     let HighestSequenceLength = (highestSequenceFront>1)
     let IsCurrentEqualHighest = (currentSequenceFront === highestSequenceFront) 
     function frontHabitDone (id, done){
+        if (Block===true) return
+        setBlock(true)
         habitDone(id, done);
         if (doneFront){
             if (currentSequenceFront===highestSequenceFront){
@@ -27,8 +30,6 @@ export default function TodayHabitBox({name, done, currentSequence, highestSeque
             setProgress({...progress,
                 totalDone: progress.totalDone+1})
         setCurrentSequenceFront(currentSequenceFront+1)
-        
-  
         }
         setDoneFront(!doneFront)
     }
